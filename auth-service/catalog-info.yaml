@@ -28,18 +28,6 @@ metadata:
 spec:
   type: openapi
   lifecycle: production
-  owner:  guests
-  definition: |
-    openapi: "3.0.0"
-    info:
-      version: 1.0.0
-      title: Artist API
-      license:
-        name: MIT
-    servers:
-      - url: http://artist.spotify.net/v1
-    paths:
-      /artists:
-        get:
-          summary: List all artists
-    ...
+  owner: guests
+  definition:
+    $text: https://raw.githubusercontent.com/0019-KDU/backstage-idp-lab/main/auth-service/openapi/auth-api-spec.yaml
