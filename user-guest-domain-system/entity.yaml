@@ -1,7 +1,7 @@
-apiversion: backstage.io/v1alpha1
+apiVersion: backstage.io/v1alpha1
 kind: Domain
 metadata:
-  name: shooping-app
+  name: shopping-app
   description: Handles everything in the ecommerce portion of the business
 spec:
   owner: ecommerce
@@ -35,14 +35,14 @@ metadata:
 spec:
   dependsOn:
     - resource:inventory-db
-  type: servcie
+  type: service
   lifecycle: production
   owner: ecommerce
   system: purchasing
 
 ---
 apiVersion: backstage.io/v1alpha1
-kind: Resources
+kind: Resource
 metadata:
   name: inventory-db
   description: Stores inventory details
