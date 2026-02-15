@@ -6,7 +6,15 @@ spec:
   type: website
   lifecycle: production
   owner: user:john
-
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: inventory
+spec:
+  type: servcie
+  lifecycle: production
+  owner: ecommerce
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Group
