@@ -33,8 +33,21 @@ kind: Component
 metadata:
   name: inventory
 spec:
+  dependsOn:
+    - resource:inventory-db
   type: servcie
   lifecycle: production
+  owner: ecommerce
+  system: purchasing
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resources
+metadata:
+  name: inventory-db
+  description: Stores inventory details
+spec:
+  type: database
   owner: ecommerce
   system: purchasing
 ---
