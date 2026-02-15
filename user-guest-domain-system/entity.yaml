@@ -5,13 +5,13 @@ metadata:
 spec:
   type: website
   lifecycle: production
-  owner: guests    
+  owner: ecommerce
 
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Group
 metadata:
-  name: ecommerce-team
+  name: ecommerce
 spec:
   type: team
   children: []  
