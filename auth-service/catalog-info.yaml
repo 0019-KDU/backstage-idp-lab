@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: auth-service
+  description: Simple authentication service with JWT tokens
+  tags:
+    - python
+    - flask
+    - auth
+  links:
+    - url: https://google.com
+      title: Google
+      icon: dashboard
+      type: website
+spec:
+  type: service
+  lifecycle: experimental
+  owner: guests
