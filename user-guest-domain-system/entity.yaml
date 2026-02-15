@@ -5,7 +5,7 @@ metadata:
 spec:
   type: website
   lifecycle: production
-  owner: ecommerce
+  owner: user:john
 
 ---
 apiVersion: backstage.io/v1alpha1
