@@ -1,3 +1,12 @@
+apiversion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: shooping-app
+  description: Handles everything in the ecommerce portion of the business
+spec:
+  owner: ecommerce
+  subdomainOf: audio-domain   
+---
 apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
