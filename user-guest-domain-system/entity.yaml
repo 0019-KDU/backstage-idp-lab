@@ -3,6 +3,8 @@ kind: Component
 metadata:
   name: shopping-cart
 spec:
+  dependsOn:
+    - component:inventory
   type: website
   lifecycle: production
   owner: user:john
