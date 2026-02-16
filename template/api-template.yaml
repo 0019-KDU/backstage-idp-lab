@@ -47,7 +47,7 @@ spec:
       action: fetch:template
       input:
         # Your skeleton repo (template source)
-        url: https://github.com/0019-KDU/express-service/tree/main
+        url: https://github.com/0019-KDU/express-service
         values:
           name: ${{ parameters.name }}
           owner: ${{ parameters.owner }}
