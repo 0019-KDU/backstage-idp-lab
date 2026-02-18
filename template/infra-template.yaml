@@ -1,0 +1,98 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: nodejs-ec2-production
+  title: NodeJS Service with EC2 (Production)
+  description: Creates app repo + infra repo with Terraform CI/CD
+spec:
+  owner: user:guest
+  type: service
+
+  parameters:
+    - title: Project Info
+      required:
+        - name
+        - repoUrl
+      properties:
+        name:
+          type: string
+          title: Service Name
+
+        repoUrl:
+          type: string
+          title: App Repository Location
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+        instanceType:
+          type: string
+          title: EC2 Instance Type
+          default: t2.micro
+          enum:
+            - t2.micro
+            - t2.small
+            - t2.medium
+
+  steps:
+
+    # ================= INFRA =================
+
+    - id: fetch-infra
+      name: Fetch Infra Template
+      action: fetch:template
+      input:
+        url: ./infra
+        targetPath: infra
+        values:
+          project_name: ${{ parameters.name }}
+          instance_type: ${{ parameters.instanceType }}
+
+    - id: publish-infra
+      name: Publish Infra Repo
+      action: publish:github
+      input:
+        sourcePath: infra
+        repoUrl: ${{ parameters.repoUrl }}-infra
+        description: Infra for ${{ parameters.name }}
+
+    - id: register-infra
+      name: Register Infra
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish-infra'].output.repoContentsUrl }}
+        catalogInfoPath: '/resource.yaml'
+
+    # ================= APP =================
+
+    - id: fetch-app
+      name: Fetch App Template
+      action: fetch:template
+      input:
+        url: ./app
+        targetPath: app
+        values:
+          name: ${{ parameters.name }}
+
+    - id: publish-app
+      name: Publish App Repo
+      action: publish:github
+      input:
+        sourcePath: app
+        repoUrl: ${{ parameters.repoUrl }}
+        description: App for ${{ parameters.name }}
+
+    - id: register-app
+      name: Register App
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish-app'].output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+
+  output:
+    links:
+      - title: App Repository
+        url: ${{ steps['publish-app'].output.remoteUrl }}
+      - title: Infra Repository
+        url: ${{ steps['publish-infra'].output.remoteUrl }}
