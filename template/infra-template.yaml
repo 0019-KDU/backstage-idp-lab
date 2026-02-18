@@ -12,19 +12,21 @@ spec:
     - title: Project Info
       required:
         - name
-        - repoUrl
+        - owner
       properties:
         name:
           type: string
           title: Service Name
+          ui:autofocus: true
 
-        repoUrl:
+        owner:
+          title: Owner
           type: string
-          title: App Repository Location
-          ui:field: RepoUrlPicker
+          description: Owner of the component
+          ui:field: OwnerPicker
           ui:options:
-            allowedHosts:
-              - github.com
+            catalogFilter:
+              - kind: [User, Group]
 
         instanceType:
           type: string
@@ -35,6 +37,19 @@ spec:
             - t2.small
             - t2.medium
 
+    - title: Choose Location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          description: Where to create the app repository
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
   steps:
 
     # ================= INFRA =================
@@ -43,19 +58,21 @@ spec:
       name: Fetch Infra Template
       action: fetch:template
       input:
-        url: ./infra
+        url: https://github.com/0019-KDU/express-service-infra-template
         targetPath: infra
         values:
           project_name: ${{ parameters.name }}
           instance_type: ${{ parameters.instanceType }}
+          owner: ${{ parameters.owner }}
 
     - id: publish-infra
       name: Publish Infra Repo
       action: publish:github
       input:
         sourcePath: infra
-        repoUrl: ${{ parameters.repoUrl }}-infra
-        description: Infra for ${{ parameters.name }}
+        repoUrl: github.com?repo=${{ parameters.name }}-infra&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
+        description: Terraform infra for ${{ parameters.name }}
+        defaultBranch: main
 
     - id: register-infra
       name: Register Infra
@@ -70,10 +87,11 @@ spec:
       name: Fetch App Template
       action: fetch:template
       input:
-        url: ./app
+        url: https://github.com/0019-KDU/express-service-template
         targetPath: app
         values:
           name: ${{ parameters.name }}
+          owner: ${{ parameters.owner }}
 
     - id: publish-app
       name: Publish App Repo
@@ -81,7 +99,8 @@ spec:
       input:
         sourcePath: app
         repoUrl: ${{ parameters.repoUrl }}
-        description: App for ${{ parameters.name }}
+        description: Express.js app for ${{ parameters.name }}
+        defaultBranch: main
 
     - id: register-app
       name: Register App
@@ -96,3 +115,6 @@ spec:
         url: ${{ steps['publish-app'].output.remoteUrl }}
       - title: Infra Repository
         url: ${{ steps['publish-infra'].output.remoteUrl }}
+      - title: Open in Backstage Catalog
+        icon: catalog
+        entityRef: ${{ steps['register-app'].output.entityRef }}
